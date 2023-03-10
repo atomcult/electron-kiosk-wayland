@@ -35,13 +35,12 @@ apps:
   electron-kiosk-wayland:
     daemon: simple
     restart-condition: always
-    extensions: [ gnome-3-38 ]
     environment:
       GTK_USE_PORTAL: 0
     command: usr/bin/wrapper
     command-chain:
       - bin/dbus-launch
-      - snap/command-chain/desktop-launch
+      - bin/desktop-launch
     plugs:
       - audio-playback
       - browser-support
@@ -54,10 +53,6 @@ apps:
 
 # Needed by Mir and/or Wayland
 layout:
-  /usr/share/icons:
-    bind: $SNAP/gnome-platform/usr/share/icons
-  /usr/share/fonts:
-    bind: $SNAP/gnome-platform/usr/share/fonts
   /usr/local/share/fonts:
     bind: $SNAP_COMMON/fonts
 
@@ -103,3 +98,39 @@ parts:
     source: wrapper
     organize:
       wrapper.sh: usr/bin/wrapper
+  debs:
+    plugin: nil
+    stage-packages:
+      - libasound2
+      - libatk-bridge2.0-0
+      - libatk1.0-0
+      - libatspi2.0-0
+      - libcairo2
+      - libcups2
+      - libdrm2
+      - libgbm1
+      - libgdk-pixbuf2.0-0
+      - libglib2.0-bin
+      - libgtk-3-0
+      - libnspr4
+      - libnss3
+      - libpango-1.0-0
+      - libx11-6
+      - libxau6
+      - libxcb1
+      - libxcomposite1
+      - libxdamage1
+      - libxdmcp6
+      - libxext6
+      - libxfixes3
+      - libxkbcommon0
+      - libxrandr2
+  desktop-glib-only:
+    plugin: make
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: glib-only
+    override-pull: |
+      snapcraftctl pull
+      patch -p1 < "$SNAPCRAFT_PROJECT_DIR/patches/desktop-launch.patch"
+    build-packages:
+      - libglib2.0-dev

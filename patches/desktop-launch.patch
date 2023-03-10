@@ -1,0 +1,25 @@
+diff --git a/common/init b/common/init
+index 8496036..c9bd922 100644
+--- a/common/init
++++ b/common/init
+@@ -31,7 +31,7 @@ SNAP=`echo $SNAP | sed -e "s|/var/lib/snapd||g"`
+ 
+ needs_update=true
+ 
+-. $SNAP_USER_DATA/.last_revision 2>/dev/null || true
++. $SNAP_USER_COMMON/.last_revision 2>/dev/null || true
+ if [ "$SNAP_DESKTOP_LAST_REVISION" = "$SNAP_REVISION" ]; then
+   needs_update=false
+ fi
+diff --git a/common/mark-and-exec b/common/mark-and-exec
+index 0e1cf78..e30f872 100644
+--- a/common/mark-and-exec
++++ b/common/mark-and-exec
+@@ -2,7 +2,7 @@
+ # Mark update and exec binary #
+ ###############################
+ 
+-[ $needs_update = true ] && echo "SNAP_DESKTOP_LAST_REVISION=$SNAP_REVISION" > $SNAP_USER_DATA/.last_revision
++[ $needs_update = true ] && echo "SNAP_DESKTOP_LAST_REVISION=$SNAP_REVISION" > $SNAP_USER_COMMON/.last_revision
+ 
+ wait_for_async_execs
